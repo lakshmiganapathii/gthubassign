@@ -1,7 +1,7 @@
 name: Bitbucket to GitHub Migration
 
 on:
-  workflow_dispatch:
+  workflow_dispatch:  # Manual trigger from GitHub UI
 
 jobs:
   migrate:
@@ -19,19 +19,29 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y git zip curl
+          sudo apt-get install -y git zip curl gh
           pip install requests
 
-      - name: Run Migration Script
-        env:
-          GITHUB_PAT: ${{ secrets.GITHUB_PAT }}
-          BITBUCKET_PAT: ${{ secrets.BITBUCKET_PAT }}
-        run: python migration_script.py
+      - name: Authenticate GitHub CLI (for repo creation)
+        run: echo "${{ secrets.LGITHUB_TOKEN }}" | gh auth login --with-token
 
-      - name: Upload Logs and Reports
+      - name: Run migration script
+        run: |
+          ls -la  # Debugging: show files in root
+          python migration_script.py
+        env:
+          GITHUB_PAT: ${{ secrets.LGITHUB_PAT }}
+          BITBUCKET_PAT: ${{ secrets.BITBUCKET_PAT }}
+          GITHUB_ORGANISATION: ${{ secrets.GITHUB_ORGANISATION }}
+          BITBUCKET_KEY: ${{ secrets.BITBUCKET_KEY }}
+          ENTERPRISE_GIT_URL: ${{ secrets.ENTERPRISE_GIT_URL }}
+          ENTERPRISE_BITBUCKET_URL: ${{ secrets.ENTERPRISE_BITBUCKET_URL }}
+
+      - name: Upload logs and reports
         uses: actions/upload-artifact@v4
         with:
           name: migration-logs
           path: |
             github_migration.log
             migration_report.csv
+            logs_report.zip
