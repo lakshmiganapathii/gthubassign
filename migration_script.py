@@ -16,14 +16,14 @@ GITHUB_USERNAME = "lakshmiganapathii"
 
 # Tokens (use GitHub Actions secrets in real usage)
 BITBUCKET_PAT = os.getenv("BITBUCKET_PAT")
-GITHUB_PAT = os.getenv("GITHUB_PAT")
+GITHUB_PAT = os.getenv("LGITHUB_PAT")
 
 # Headers
 bitbucket_headers = {
     "Authorization": f"Bearer {BITBUCKET_PAT}"
 }
 github_headers = {
-    "Authorization": f"token {GITHUB_PAT}",
+    "Authorization": f"token {LGITHUB_PAT}",
     "Accept": "application/vnd.github+json"
 }
 
