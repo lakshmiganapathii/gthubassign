@@ -23,7 +23,7 @@ jobs:
           pip install requests
 
       - name: Authenticate GitHub CLI (for repo creation)
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+        run: echo "${{ secrets.LGITHUB_TOKEN }}" | gh auth login --with-token
 
       - name: Run migration script
         run: |
